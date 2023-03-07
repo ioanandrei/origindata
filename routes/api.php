@@ -1,6 +1,7 @@
 <?php
 
 use App\Api\Http\Controllers\CompanyController;
+use App\Api\Http\Controllers\EmployeeController;
 use App\Api\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,16 @@ Route::group(['prefix' => '', 'as' => 'api.', 'middleware' => ['auth.actions']],
                 Route::group(['prefix' => '{projectId}', 'middleware' => ['project.membership']], function() {
                     Route::put('', [ProjectController::class, 'update'])->name('update');
                     Route::delete('', [ProjectController::class, 'delete'])->name('delete');
+                });
+            });
+
+            Route::group(['prefix' => 'employees', 'as' => 'employees.'], function() {
+                Route::get('', [EmployeeController::class, 'index'])->name('index');
+                Route::post('', [EmployeeController::class, 'store'])->name('store');
+
+                Route::group(['prefix' => '{employeeId}'], function() {
+                    Route::put('', [EmployeeController::class, 'update'])->name('update');
+                    Route::delete('', [EmployeeController::class, 'delete'])->name('delete');
                 });
             });
         });

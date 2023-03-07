@@ -19,7 +19,11 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * Table columns:
  * @property int                      $id
+ * @property string                   $first_name
+ * @property string                   $last_name
  * @property string                   $email
+ * @property string                   $phone
+ * @property int                      $company_id
  * @property Carbon                   $created_at
  * @property Carbon                   $updated_at
  *
@@ -45,7 +49,10 @@ class Employee extends Authenticatable implements AuthorizedEntity
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'phone',
+        'company_id',
         'email',
         'password',
     ];

@@ -14,12 +14,12 @@ class ProjectMembership
 
         // check if the requested project belongs to the requested company
         if ( $project->company_id != $request->route('companyId') ) {
-            return unauthorizedResponse();
+            return unauthorizedResponse("This project doesn't belong to this company.");
         }
 
         // check if the user has the requested project
         if ( !auth()->user()->projects->contains($project->id) ) {
-            return unauthorizedResponse();
+            return unauthorizedResponse("You are not assigned to this project.");
         }
 
         return $next($request);

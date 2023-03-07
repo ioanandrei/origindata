@@ -13,7 +13,7 @@ class ActionMiddleware
         $action = config('route_actions.'.$request->route()->getName());
 
         if ( !$action || !auth()->user()->tokenCan($action) ) {
-            return unauthorizedResponse();
+            return unauthorizedResponse("You don't have permission for this action.");
         }
 
         return $next($request);

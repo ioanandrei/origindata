@@ -2,17 +2,19 @@
 
 namespace App\Api\Http\Middleware;
 
+use App\Models\Company;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class CompanyMembership
 {
     public function handle(Request $request, Closure $next)
     {
+        $company = Company::query()->findOrFail($request->route('companyId'));
+
         // check if the employee is in the requested company
-        if ( auth()->user()->company_id != $request->route('companyId') ) {
-            return unauthorizedResponse();
+        if ( auth()->user()->company_id != $company->id ) {
+            return unauthorizedResponse("You don't belong to this company.");
         }
 
         return $next($request);

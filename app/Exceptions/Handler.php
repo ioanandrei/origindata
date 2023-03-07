@@ -2,11 +2,15 @@
 
 namespace App\Exceptions;
 
+use App\Api\Traits\ExceptionHandlerHelper;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Facades\Request;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ExceptionHandlerHelper;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -39,10 +43,16 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
-    public function register(): void
+    public function register() : void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->reportable(function(Throwable $e) {
+
+        });
+
+        $this->renderable(function(Throwable $e) {
+            if ( Request::wantsJson() && config('app.env') != 'local' ) {
+                return $this->handleJsonResponse($e);
+            }
         });
     }
 }

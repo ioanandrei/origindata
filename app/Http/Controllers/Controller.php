@@ -22,7 +22,7 @@ class Controller extends BaseController
      *
      * @return JsonResponse
      */
-    public function makeJsonResponse(mixed $data, string $message = 'Success', int $status = 200) : JsonResponse
+    public function makeJsonResponse(mixed $data = [], string $message = 'Success', int $status = 200) : JsonResponse
     {
         return response()->json([
             'message' => $message,

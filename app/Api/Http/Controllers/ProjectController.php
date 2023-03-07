@@ -65,6 +65,6 @@ class ProjectController extends Controller
         $project = Project::query()->find($request->route('projectId'));
         $project->deleteOrFail();
 
-        return $this->makeJsonResponse([]);
+        return $this->makeJsonResponse();
     }
 }

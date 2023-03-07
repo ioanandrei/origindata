@@ -1,5 +1,7 @@
 <?php
 
+use App\Api\Http\Controllers\CompanyController;
+use App\Api\Http\Controllers\ProjectController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,24 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:sanctum')->get('/user', function(Request $request) {
     return $request->user();
+});
+
+Route::group(['prefix' => '', 'as' => 'api.', 'middleware' => ['auth.actions']], function() {
+    Route::group(['prefix' => 'companies', 'middleware' => 'auth:sanctum', 'as' => 'companies.'], function() {
+        Route::get('', [CompanyController::class, 'index'])->name('index');
+
+        Route::group(['prefix' => '{companyId}', 'middleware' => ['company.membership']], function() {
+            Route::group(['prefix' => 'projects', 'as' => 'projects.'], function() {
+                Route::get('', [ProjectController::class, 'index'])->name('index');
+                Route::post('', [ProjectController::class, 'store'])->name('store');
+
+                Route::group(['prefix' => '{projectId}', 'middleware' => ['project.membership']], function() {
+                    Route::put('', [ProjectController::class, 'update'])->name('update');
+                    Route::delete('', [ProjectController::class, 'delete'])->name('delete');
+                });
+            });
+        });
+    });
 });

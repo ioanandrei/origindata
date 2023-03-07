@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Company;
+use App\Models\Employee;
+use App\Models\Project;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -10,13 +13,20 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
-    public function run(): void
+    public function run() : void
     {
-        // \App\Models\User::factory(10)->create();
+        Company::factory()
+               ->count(10)
+               ->has(Employee::factory()->count(fake()->numberBetween(1, 10)))
+               ->has(Project::factory()->count(fake()->numberBetween(1, 5)))
+               ->create()
+        ;
 
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $employees = Employee::all();
+        $employees->each(function(Employee $e) {
+            $token = $e->createToken($e->authorizationTokenName);
+
+            dump("Token generated with success: {$token->plainTextToken}");
+        });
     }
 }

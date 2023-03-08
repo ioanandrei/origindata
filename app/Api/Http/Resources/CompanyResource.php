@@ -14,8 +14,11 @@ class CompanyResource extends JsonResource
         $entity = $this->resource;
 
         return [
-            'id'   => $entity->id,
-            'name' => $entity->name,
+            'id'               => $entity->id,
+            'name'             => $entity->name,
+            'legal_identifier' => $entity->legal_identifier,
+            'projects'         => ProjectResource::collection($entity->projects),
+            'employees'        => EmployeeResource::collection($entity->employees),
         ];
     }
 }

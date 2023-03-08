@@ -26,11 +26,16 @@ Route::group(['prefix' => '', 'as' => 'api.', 'middleware' => ['auth.actions']],
         Route::get('', [CompanyController::class, 'index'])->name('index');
 
         Route::group(['prefix' => '{companyId}', 'middleware' => ['company.membership']], function() {
+            Route::get('', [CompanyController::class, 'show'])->name('show');
+            Route::put('', [CompanyController::class, 'update'])->name('update');
+            Route::delete('', [CompanyController::class, 'delete'])->name('delete');
+
             Route::group(['prefix' => 'projects', 'as' => 'projects.'], function() {
                 Route::get('', [ProjectController::class, 'index'])->name('index');
                 Route::post('', [ProjectController::class, 'store'])->name('store');
 
                 Route::group(['prefix' => '{projectId}', 'middleware' => ['project.membership']], function() {
+                    Route::get('', [ProjectController::class, 'show'])->name('show');
                     Route::put('', [ProjectController::class, 'update'])->name('update');
                     Route::delete('', [ProjectController::class, 'delete'])->name('delete');
                 });
@@ -40,7 +45,8 @@ Route::group(['prefix' => '', 'as' => 'api.', 'middleware' => ['auth.actions']],
                 Route::get('', [EmployeeController::class, 'index'])->name('index');
                 Route::post('', [EmployeeController::class, 'store'])->name('store');
 
-                Route::group(['prefix' => '{employeeId}'], function() {
+                Route::group(['prefix' => '{employeeId}', 'middleware' => ['employee.authentication']], function() {
+                    Route::get('', [EmployeeController::class, 'show'])->name('show');
                     Route::put('', [EmployeeController::class, 'update'])->name('update');
                     Route::delete('', [EmployeeController::class, 'delete'])->name('delete');
                 });

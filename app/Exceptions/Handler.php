@@ -53,6 +53,8 @@ class Handler extends ExceptionHandler
             if ( Request::wantsJson() && config('app.env') != 'local' ) {
                 return $this->handleJsonResponse($e);
             }
+
+            return;
         });
     }
 }

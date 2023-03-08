@@ -7,6 +7,7 @@ use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Project;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,11 +23,38 @@ class DatabaseSeeder extends Seeder
                ->create()
         ;
 
+        $this->createTokens();
+        $this->assignEmployeesToProjects();
+    }
+
+    private function assignEmployeesToProjects()
+    {
+        $companies = Company::all();
+
+        $companies->each(function(Company $c) {
+            $employees = $c->employees;
+
+            $c->projects->each(function(Project $p) use ($employees) {
+                $employees->slice(0, fake()->numberBetween(1, ($employees->count() - 1)))
+                          ->each(function(Employee $e) use ($p) {
+                              $e->projects()->attach($p->id);
+                          })
+                ;
+            });
+        });
+    }
+
+    private function createTokens() : void
+    {
         $employees = Employee::all();
         $employees->each(function(Employee $e) {
+            // generate the token
             $token = $e->createToken($e->authorizationTokenName);
 
-            dump("Token generated with success: {$token->plainTextToken}");
+            // save it to the test table
+            DB::table('test_tokens')->insert([
+                'token' => $token->plainTextToken,
+            ]);
         });
     }
 }

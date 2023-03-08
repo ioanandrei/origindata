@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Api\Http\Requests\Employee;
+namespace App\Api\Http\Requests\Company;
 
-use App\Models\Employee;
+use App\Models\Company;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreRequest extends FormRequest
+class UpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,20 +26,12 @@ class StoreRequest extends FormRequest
         $employee = auth()->user();
 
         return [
-            'first_name' => ['required', 'string', 'min:3'],
-            'last_name'  => ['required', 'string', 'min:3'],
-            'email'      => [
-                'sometimes',
-                'required',
-                'email',
-                Rule::unique(Employee::class, 'email')->ignore($employee->id),
-            ],
-            'phone'      => [
+            'name'             => ['required', 'string', 'min:3'],
+            'legal_identifier' => [
                 'sometimes',
                 'required',
                 'string',
-                'min:9',
-                Rule::unique(Employee::class, 'phone')->ignore($employee->id),
+                Rule::unique(Company::class, 'legal_identifier')->ignore($employee->company_id),
             ],
         ];
     }

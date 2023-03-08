@@ -15,6 +15,7 @@ use Illuminate\Support\Collection;
  * Table columns:
  * @property int                       $id
  * @property string                    $name
+ * @property string                    $legal_identifier
  * @property Carbon                    $created_at
  * @property Carbon                    $updated_at
  *
@@ -32,6 +33,8 @@ class Company extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     // Relationships
 
     /**
@@ -48,11 +51,5 @@ class Company extends Model
     public function employees() : HasMany
     {
         return $this->hasMany(Employee::class);
-    }
-
-    // Accessors
-    public function getAuthorizationTokenAttribute() : string
-    {
-        return "c-".$this->id."-access-token";
     }
 }

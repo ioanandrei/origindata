@@ -34,7 +34,19 @@ class ProjectController extends Controller
             'company_id' => $request->route('companyId'),
         ]);
 
-        return $this->makeJsonResponse(new ProjectResource($project));
+        return $this->makeJsonResponse(ProjectResource::make($project));
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function show(Request $request) : JsonResponse
+    {
+        $project = Project::query()->find($request->route('projectId'));
+
+        return $this->makeJsonResponse(ProjectResource::make($project));
     }
 
     /**

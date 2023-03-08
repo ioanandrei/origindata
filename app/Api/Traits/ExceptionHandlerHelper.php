@@ -2,6 +2,7 @@
 
 namespace App\Api\Traits;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
@@ -22,8 +23,19 @@ trait ExceptionHandlerHelper
         return match (get_class($exception)) {
             NotFoundHttpException::class => $this->handleNotFoundException($exception),
             ValidationException::class => $this->handleValidationException($exception),
+            AuthenticationException::class => $this->handleAuthenticationException($exception),
             default => $this->handleGeneralException($exception)
         };
+    }
+
+    /**
+     * @param Throwable $exception
+     *
+     * @return JsonResponse
+     */
+    private function handleAuthenticationException(Throwable $exception) : JsonResponse
+    {
+        return unauthorizedResponse($exception->getMessage());
     }
 
     /**
